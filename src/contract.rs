@@ -5,11 +5,10 @@ use cw2::set_contract_version;
 
 use crate::error::ContractError;
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
-use crate::state::{Config, CONFIG};
+use crate::state::{Config, Poll, CONFIG, POLLS};
 
 const CONTRACT_NAME: &str = "crates.io:cw-starter";
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
-
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn instantiate(
@@ -32,12 +31,19 @@ pub fn instantiate(
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn execute(
-    _deps: DepsMut,
-    _env: Env,
-    _info: MessageInfo,
-    _msg: ExecuteMsg,
+    deps: DepsMut,
+    env: Env,
+    info: MessageInfo,
+    msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
-    unimplemented!()
+    match msg {
+        ExecuteMsg::CreatePoll {
+            poll_id,
+            question,
+            options,
+        } => execute_create_poll(deps, env, info, poll_id, question, options),
+        ExecuteMsg::Vote { poll_id, vote } => unimplemented!(),
+    }
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
@@ -45,12 +51,43 @@ pub fn query(_deps: Deps, _env: Env, _msg: QueryMsg) -> StdResult<Binary> {
     unimplemented!()
 }
 
+fn execute_create_poll(
+    deps: DepsMut,
+    _env: Env,
+    info: MessageInfo,
+    poll_id: String,
+    question: String,
+    options: Vec<String>,
+) -> Result<Response, ContractError> {
+    // Restricts # of options for creating the poll
+    if options.len() > 10 {
+        return Err(ContractError::TooManyOptions {});
+    }
+
+    // Generates a vector for the options to make the register of votes later
+    let mut opts: Vec<(String, u64)> = vec![];
+    for option in options {
+        opts.push((option, 0));
+    }
+
+    // Generates the poll
+    let poll = Poll {
+        creator: info.sender,
+        question,
+        options: opts,
+    };
+
+    POLLS.save(deps.storage, poll_id, &poll)?;
+
+    Ok(Response::new())
+}
+
 #[cfg(test)]
 mod tests {
-    use cosmwasm_std::attr; // constructs an attribute
-    use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info}; // mock functions
     use crate::contract::instantiate; // real contract instantiate function
-    use crate::msg::InstantiateMsg; // our instantiate method
+    use crate::msg::InstantiateMsg;
+    use cosmwasm_std::attr; // constructs an attribute
+    use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info}; // mock functions // our instantiate method
 
     // Fake addresses
     pub const ADDR1: &str = "addr1";
@@ -82,7 +119,9 @@ mod tests {
         let env = mock_env();
         let info = mock_info(ADDR2, &vec![]);
 
-        let msg = InstantiateMsg { admin: Some(ADDR2.to_string()) };
+        let msg = InstantiateMsg {
+            admin: Some(ADDR2.to_string()),
+        };
         let res = instantiate(deps.as_mut(), env, info, msg).unwrap();
 
         assert_eq!(

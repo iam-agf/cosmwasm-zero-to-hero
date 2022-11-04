@@ -19,16 +19,16 @@ pub enum ExecuteMsg {
         poll_id: String,
         vote: String
     },
-    // Need to verify owner is deleting poll
-    DeletePoll{ 
-        poll_id: String,
-        admin: String
-    },
-    DeleteVote{
-        poll_id: String,
-        admin: String,
-        vote: String
-    },
+    // Can't stay available or msg doesn't work in contract.rs
+    // DeletePoll{ 
+    //     poll_id: String,
+    //     admin: String
+    // },
+    // DeleteVote{
+    //     poll_id: String,
+    //     admin: String,
+    //     vote: String
+    // },
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
