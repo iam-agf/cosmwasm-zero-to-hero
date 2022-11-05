@@ -139,7 +139,7 @@ fn execute_vote(
 mod tests {
     use crate::contract::{execute, instantiate}; // Adding execute
     use crate::msg::{ExecuteMsg, InstantiateMsg}; // Adding ExecuteMsg
-    use crate::ContractError;
+    // use crate::ContractError;
     use cosmwasm_std::attr; // constructs an attribute
     use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info}; // mock functions // our instantiate method
 

@@ -34,13 +34,14 @@ pub enum ExecuteMsg {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum QueryMsg {
-    CustomMsg { val: String },
-}
-
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-#[serde(rename_all = "snake_case")]
-pub struct CustomResponse {
-    val: String,
+    AllPolls {}, // Gets all the existing polls
+    Poll {
+        poll_id: String, // Gets one poll
+    },
+    Vote { // Gets the vote of one address
+        poll_id: String,
+        address: String,
+    },
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
