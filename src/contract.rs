@@ -477,9 +477,8 @@ mod tests {
         let _res = instantiate(deps.as_mut(), env.clone(), info.clone(), msg).unwrap();
 
         let msg = QueryMsg::AllPolls {};
-        let bin = query(deps.as_ref(), env, msg).unwrap(); 
+        let bin = query(deps.as_ref(), env, msg).unwrap();
         let res: AllPollsResponse = from_binary(&bin).unwrap();
         assert_eq!(res.polls.len(), 0);
-
     }
 }

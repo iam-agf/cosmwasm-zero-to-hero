@@ -6,7 +6,7 @@ use cw_storage_plus::{Item, Map};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct Config {
-    pub admin: Addr
+    pub admin: Addr,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
@@ -20,7 +20,6 @@ pub struct Poll {
 pub struct Ballot {
     pub option: String,
 }
-
 
 pub const CONFIG: Item<Config> = Item::new("config");
 

@@ -1,6 +1,6 @@
+use crate::state::{Ballot, Poll};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use crate::state::{Poll, Ballot};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
@@ -11,17 +11,17 @@ pub struct InstantiateMsg {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ExecuteMsg {
-    CreatePoll{
+    CreatePoll {
         poll_id: String,
         question: String,
-        options: Vec<String>
+        options: Vec<String>,
     },
-    Vote{
+    Vote {
         poll_id: String,
-        vote: String
+        vote: String,
     },
     // Can't stay available or msg doesn't work in contract.rs
-    // DeletePoll{ 
+    // DeletePoll{
     //     poll_id: String,
     //     admin: String
     // },
@@ -39,7 +39,8 @@ pub enum QueryMsg {
     Poll {
         poll_id: String, // Gets one poll
     },
-    Vote { // Gets the vote of one address
+    Vote {
+        // Gets the vote of one address
         poll_id: String,
         address: String,
     },
@@ -52,12 +53,12 @@ pub struct AllPollsResponse {
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
-pub struct PollResponse{
+pub struct PollResponse {
     pub poll: Option<Poll>,
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
-pub struct VoteResponse{
+pub struct VoteResponse {
     pub vote: Option<Ballot>,
 }
 
