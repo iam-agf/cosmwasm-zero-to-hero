@@ -132,7 +132,7 @@ fn execute_vote(
             Ok(Response::new())
         },
         // Poll doesn't exist
-        None => Err(ContractError::Unauthorized {}), // Return error
+        None => Err(ContractError::PollNotFound {}), // Return error
     }
 }
 
